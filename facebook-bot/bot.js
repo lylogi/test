@@ -9,5 +9,5 @@ login({email: "ngly581@gmail.com", password: "chettoi"}, (err, api) => {
     var msg = {
         body: "Bot",
     }
-    api.sendMessage(msg, yourID);
+    api.sendMessage("bot", yourID);
 });
