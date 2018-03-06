@@ -22,13 +22,13 @@ app.get('/', (req, res) => {
 
 app.get('/webhook/', function(req, res) {
   console.log('Call webhook');
-  if (req.query['verify_token'] === 'token me') {
+  if (req.query['verify_token'] === 'verify-me') {
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
 });
 
-app.post('/webhook', function (req, res) {
+app.post('/webhook/', function (req, res) {
     messaging_events = req.body.entry[0].messaging
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i]
@@ -42,15 +42,15 @@ app.post('/webhook', function (req, res) {
 })
 
 function sendTextMessage(sender, text) {
-    messageData = {
+    var messageData = {
         text:text
-    }
+    };
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: this._token},
         method: 'POST',
         json: {
-            recipient: {id:senderId},
+            recipient: {id:sender},
             message: messageData,
         }
     }, function(error, response, body) {
