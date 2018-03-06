@@ -8,6 +8,8 @@ var express = require('express');
 
 var bot = new require("./facebook-bot/bot");
 
+bot;
+
 var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -29,7 +31,7 @@ app.get('/webhook', function(req, res) {
   res.send('Error, wrong validation token');
 });
 
-app.post('/webhook', function(req, res) {
+/*app.post('/webhook', function(req, res) {
   var entries = req.body.entry;
   for (var entry of entries) {
     log.info(entries);
@@ -59,6 +61,19 @@ app.post('/webhook', function(req, res) {
   }
 
   res.status(200).send("OK");
+});*/
+app.post('/webhook', (req, res) => {
+  console.log(req.body);
+  if (req.body.object === 'page') {
+    req.body.entry.forEach((entry) => {
+      entry.messaging.forEach((event) => {
+        if (event.message && event.message.text) {
+          sendMessage(event);
+        }
+      });
+    });
+    res.status(200).end();
+  }
 });
 
 
