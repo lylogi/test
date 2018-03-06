@@ -7,9 +7,8 @@ var await = require("asyncawait/await");
 var express = require('express');
 
 var bot = new require("./facebook-bot/bot");
-bot;
 
-/*var app = express();
+var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -68,4 +67,4 @@ app.set('ip', process.env.IP || "127.0.0.1");
 
 server.listen(app.get('port'), function() {
   console.log("Express server listening at %s:%d ", app.get('ip'), app.get('port'));
-});*/
+});

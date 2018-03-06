@@ -5,9 +5,9 @@ login({email: "ngly581@gmail.com", password: "chettoi"}, (err, api) => {
     if(err) return console.error(err);
 
     // Note this example uploads an image called image.jpg
-    var yourID = "100008972867720";
+    var yourID = "100006652508750";
     var msg = {
-        body: "Hey!",
+        body: "Bot",
     }
     api.sendMessage(msg, yourID);
 });
