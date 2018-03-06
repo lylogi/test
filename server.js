@@ -6,9 +6,6 @@ var async = require("asyncawait/async");
 var await = require("asyncawait/await");
 var express = require('express');
 
-var bot = new require("./facebook-bot/bot");
-
-bot;
 
 var app = express();
 app.use(logger('dev'));
@@ -23,15 +20,15 @@ app.get('/', (req, res) => {
   res.send("Home page.");
 });
 
-app.get('/webhook', function(req, res) {
+app.get('/webhook/', function(req, res) {
   console.log('Call webhook');
-  if (req.query['hub.verify_token'] === 'token me') {
+  if (req.query['verify_token'] === 'token me') {
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
 });
 
-app.post('/webhook/', function (req, res) {
+app.post('/webhook', function (req, res) {
     messaging_events = req.body.entry[0].messaging
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i]
@@ -50,10 +47,10 @@ function sendTextMessage(sender, text) {
     }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
+        qs: {access_token: this._token},
         method: 'POST',
         json: {
-            recipient: {id:sender},
+            recipient: {id:senderId},
             message: messageData,
         }
     }, function(error, response, body) {
