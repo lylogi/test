@@ -31,37 +31,39 @@ app.get('/webhook', function(req, res) {
   res.send('Error, wrong validation token');
 });
 
-app.post('/webhook', function(req, res) {
-  var entries = req.body.entry;
-  for (var entry of entries) {
-    log.info(entries);
-    var messaging = entry.messaging;
-    for (var message of messaging) {
-      var senderId = message.sender.id;
-      if (message.message) {
-        // If user send text
-        if (message.message.text) {
-          bot.reply(senderId, message.message.text);
+app.post('/webhook/', function (req, res) {
+    messaging_events = req.body.entry[0].messaging
+    for (i = 0; i < messaging_events.length; i++) {
+        event = req.body.entry[0].messaging[i]
+        sender = event.sender.id
+        if (event.message && event.message.text) {
+            text = event.message.text
+            sendTextMessage(sender, "test")
         }
-        // If user send attachment
-        else if (message.message.attachments) {
-          //bot.sendAttachmentBack(senderId, message.message.attachments[0]);
-          if (message.message.attachments[0].payload != null) {
-            var imageUrl = message.message.attachments[0].payload.url;
-            bot.processImage(senderId, imageUrl);
-          }
-        }
-      }
-      // If user click button
-      else if (message.postback) {
-        var payload = message.postback.payload;
-        bot.processPostback(senderId, payload);
-      }
     }
-  }
+    res.sendStatus(200)
+})
 
-  res.status(200).send("OK");
-});
+function sendTextMessage(sender, text) {
+    messageData = {
+        text:text
+    }
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:token},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending messages: ', error)
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error)
+        }
+    })
+}
 
 
 
