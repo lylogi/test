@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   res.send("Home page.");
 });
 
-app.get('/webhook/', function(req, res) {
+app.get('/webhook', function(req, res) {
   console.log('Call webhook');
   if (req.query['hub.verify_token'] === '123456') {
     res.send(req.query['hub.challenge']);
