@@ -24,6 +24,7 @@ app.get('/webhook/', function(req, res) {
   console.log('Call webhook');
   if (req.query['hub.verify_token'] === '123456') {
     res.send(req.query['hub.challenge']);
+    res.send('ok');
   }
   res.send('Error, wrong validation token');
 });
