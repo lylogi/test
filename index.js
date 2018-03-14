@@ -1,7 +1,7 @@
 const login = require("facebook-chat-api");
 var data  = require('./facebook-bot/fillter/text');
 var score = require("string_score");
-var account = require('./login.js');
+var account = require('./login/login');
 
 
 // Create simple echo bot
