@@ -5,7 +5,7 @@ var account = require('./login/login');
 
 
 // Create simple echo bot
-login({email: 'ngly581gmail.com', password: 'chettoi'}, (err, api) => {
+login({email: ngly581gmail.com, password: account.pass}, (err, api) => {
     if(err) return console.error(err);
     api.setOptions({listenEvents: true,logLevel: "silent"})
     api.listen((err, event) => {
