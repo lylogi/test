@@ -1,59 +1,35 @@
 var data  = require('./fillter/text');
-require("string_score");
-const {Wit, log} = require('node-wit');
+var score = require("string_score");
 
 class Bot {
     constructor() {
         this.myName = 'Bot';
     }
-    _think(text) {
-        var me = this;
-        var short_code_fillter = new shortCodeFillter(text);
-        var text_fillter = new textFillter(text);
-        var spam_fillter = new spamFillter(text);
-        return new Promise((resolve, reject) => {
-            short_code_fillter.fill()
-                .then(text_fillter.fill.bind(me))
-                .then(spam_fillter.fill.bind(me))
-                .then((result) => {
-                    console.log(result);
-                    resolve(result || { type: 'TEXT', output: 'NOT_FOUND' });
-                });
-        })
-    }
-    data() {
-        var me = this;
-        const client = new Wit({ accessToken: 'UJFJHXX5EH4OLYK5MJK4GYXQ4H5TPNUI' });
-        client.message('what is the weather in London?', {})
-            .then((data) => {
-                console.log('Yay, got Wit.ai response: ' + data);
-                fbAPI.sendTextMessage(me.senderId, data.entities.intent[0].value);
+    reply(message ){
+        let obj = null
+        if(message === '/stop') {
+            obj = "Goodbye!"
+        }else{
+          var max_core = 0
+          data.forEach((data_row) => {
+            var inputs = data_row.input;
+            var num=0;
+            var score = 0
+            var body = message;
+            inputs.forEach((input_row) =>{
+              let new_score = body.score(input_row);
+              let re_new_score = input_row.score(body);
+              re_new_score = re_new_score>0.4?re_new_score:0;
+               score += Math.max(new_score, re_new_score)
+              if(new_score>0.3){++num}
             })
-            .catch(console.error);
-    }
-    reply(senderId, input) {
-        var me = this;
-        me.input = input
-        me.senderId = senderId
-        me.data();
-
-        me._think(me.input)
-            .then((result) => {
-                switch (result.type) {
-                    case 'TEXT': {
-                        fbAPI.sendTextMessage(me.senderId, result.value);
-                        break;
-                    }
-                    default: {
-                        fbAPI.sendTextMessage(me.senderId, 'NO MATCH');
-                        break;
-                    }
-                }
-            });
-    }
-    customReplace(text) {
-        text = text.replace(/@myname/g, this.myName);
-        return text
+            if (score / inputs.length + num > max_core) {
+                max_core = score
+                obj = data_row.output
+            }
+        })
+        }
+        return obj;
     }
 }
-module.exports = new Bot();
+module.exports = new Bot;

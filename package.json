@@ -15,6 +15,7 @@
     "express": "^4.16.2",
     "facebook-chat-api": "^1.4.0",
     "fs": "0.0.1-security",
+    "google-translate-api": "^2.3.0",
     "morgan": "^1.9.0",
     "node-wit": "^5.0.0",
     "simple-node-logger": "^0.93.37",
